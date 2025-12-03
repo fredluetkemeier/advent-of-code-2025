@@ -10,8 +10,6 @@ function partOne(inputs: string[], dialPosition: number = 50): number {
     const rotation = parseDialRotation(value!);
     const newPosition = rotateDial(dialPosition, rotation);
 
-    console.log(newPosition);
-
     return (newPosition === 0 ? 1 : 0) + partOne(rest ?? [], newPosition);
 }
 
@@ -21,13 +19,13 @@ function parseDialRotation(value: string): number {
 }
 
 function rotateDial(position: number, rotation: number): number {
-    const positionValue = position + rotation;
+    const adjustedRotation =
+        Math.abs(rotation) > 100 ? rotation % 100 : rotation;
+    const positionValue = position + adjustedRotation;
 
-    console.log(position, rotation, positionValue);
+    if (positionValue < 0) return 100 + positionValue;
 
-    if (positionValue < 0) return 100 + (positionValue % 100);
-
-    if (positionValue > 99) return positionValue % 100;
+    if (positionValue > 99) return positionValue - 100;
 
     return positionValue;
 }
