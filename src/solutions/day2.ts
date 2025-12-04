@@ -1,5 +1,3 @@
-import fs from "fs";
-
 export function dayTwo(input: string): [string, string] {
     const idRanges = input
         .split(",")
@@ -21,10 +19,6 @@ function partOne(idRanges: IdRange[]): number {
         []
     );
 
-    console.log(invalidIds);
-
-    fs.writeFileSync("./invalidIds.txt", JSON.stringify(invalidIds, null, 4));
-
     return invalidIds.reduce((acc, value) => acc + value, 0);
 }
 
@@ -33,9 +27,7 @@ function findInvalidNumbers(range: IdRange): number[] {
     let invalidNumbers: number[] = [];
 
     for (let i = start; i <= end; i++) {
-        // console.log(i);
-
-        if (isNumberInvalid(i)) {
+        if (isNumberInvalid(i.toString())) {
             invalidNumbers = [...invalidNumbers, i];
         }
     }
@@ -43,31 +35,14 @@ function findInvalidNumbers(range: IdRange): number[] {
     return invalidNumbers;
 }
 
-function isNumberInvalid(value: number, windowSize: number = 1): boolean {
-    const digits = value.toString().split("");
+function isNumberInvalid(value: string): boolean {
+    const digits = value.split("");
 
     if (digits.length % 2 !== 0) return false;
 
-    const maxWindowSize = Math.floor(digits.length / 2);
-    // const isWindowCompatible = digits.length % windowSize === 0;
+    const middleIndex = value.length / 2;
+    const firstHalf = digits.slice(0, middleIndex).join("");
+    const secondHalf = digits.slice(middleIndex).join("");
 
-    if (windowSize > maxWindowSize) {
-        return false;
-    }
-
-    const windowPattern = digits.slice(0, windowSize).join("");
-
-    // console.log("windowPattern", windowPattern);
-
-    for (let i = windowSize; i < digits.length; i += windowSize) {
-        const windowSlice = digits.slice(i, i + windowSize).join("");
-
-        // console.log({ windowPattern, windowSlice, i });
-
-        if (windowPattern !== windowSlice) {
-            return isNumberInvalid(value, windowSize + 1);
-        }
-    }
-
-    return true;
+    return firstHalf === secondHalf;
 }
