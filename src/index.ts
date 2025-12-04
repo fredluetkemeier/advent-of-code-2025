@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { dayOne } from "./solutions/day1.js";
+import { dayTwo } from "./solutions/day2.js";
 import fs from "fs";
 
 const program = new Command();
@@ -8,14 +9,10 @@ program
     .name("advent-of-code-2025")
     .argument("<day>")
     .action((day) => {
-        let part1 = "";
-        let part2 = "";
-        const inputs = readInputs(`${day}.txt`);
+        const input = readInputFile(`${day}.txt`);
 
-        switch (day) {
-            case "1":
-                [part1, part2] = dayOne(inputs);
-        }
+        const dayFn = getDayFn(day);
+        const [part1, part2] = dayFn(input);
 
         console.log(`-- Day ${day} --`);
         console.log(`Part 1: ${part1}`);
@@ -24,9 +21,17 @@ program
 
 program.parse();
 
-function readInputs(filename: string): string[] {
-    return fs
-        .readFileSync(`./inputs/${filename}`, "utf-8")
-        .split("\n")
-        .map((x) => x.trim());
+function readInputFile(filename: string): string {
+    return fs.readFileSync(`./inputs/${filename}`, "utf-8").trim();
+}
+
+function getDayFn(day: string): (inputs: string) => [string, string] {
+    switch (day) {
+        case "1":
+            return dayOne;
+        case "2":
+            return dayTwo;
+        default:
+            return ([]) => ["", ""];
+    }
 }

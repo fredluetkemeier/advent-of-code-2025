@@ -1,5 +1,7 @@
-export function dayOne(inputs: string[]): [string, string] {
-    return [partOne(inputs).toString(), partTwo(inputs).toString()];
+export function dayOne(input: string): [string, string] {
+    const inputList = input.split("\n").map((x) => x.trim());
+
+    return [partOne(inputList).toString(), partTwo(inputList).toString()];
 }
 
 // PART 1
