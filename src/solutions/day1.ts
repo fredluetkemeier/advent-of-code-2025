@@ -1,6 +1,8 @@
 export function dayOne(inputs: string[]): [string, string] {
-    return [partOne(inputs).toString(), ""];
+    return [partOne(inputs).toString(), partTwo(inputs).toString()];
 }
+
+// PART 1
 
 function partOne(inputs: string[], dialPosition: number = 50): number {
     if (inputs.length == 0) return 0;
@@ -12,6 +14,40 @@ function partOne(inputs: string[], dialPosition: number = 50): number {
 
     return (newPosition === 0 ? 1 : 0) + partOne(rest ?? [], newPosition);
 }
+
+// PART 2
+
+function partTwo(inputs: string[], dialPosition: number = 50): number {
+    if (inputs.length == 0) return 0;
+
+    const [value, ...rest] = inputs;
+
+    const rotation = parseDialRotation(value!);
+    const newPosition = rotateDial(dialPosition, rotation);
+
+    const zeroTouchCount = countZeroTouches(
+        dialPosition,
+        rotation,
+        newPosition
+    );
+
+    // console.log({ dialPosition, newPosition });
+    console.log("touch count:", zeroTouchCount);
+
+    return (
+        (newPosition === 0 ? 1 : 0) +
+        zeroTouchCount +
+        partTwo(rest ?? [], newPosition)
+    );
+}
+
+function countZeroTouches(
+    position: number,
+    rotation: number,
+    newPosition: number
+): number {}
+
+// SHARED
 
 function parseDialRotation(value: string): number {
     const parsedRotation = value.slice(1);
