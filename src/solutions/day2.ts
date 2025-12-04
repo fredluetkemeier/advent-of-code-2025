@@ -12,30 +12,27 @@ type IdRange = [number, number];
 
 function partOne(idRanges: IdRange[]): number {
     const invalidIds = idRanges.reduce(
-        (acc: number[], range: IdRange) => [
-            ...acc,
-            ...findSymmetricalIds(range),
-        ],
+        (acc: number[], range: IdRange) => [...acc, ...findDoubledIds(range)],
         []
     );
 
     return invalidIds.reduce((acc, value) => acc + value, 0);
 }
 
-function findSymmetricalIds(range: IdRange): number[] {
+function findDoubledIds(range: IdRange): number[] {
     const [start, end] = range;
-    let invalidNumbers: number[] = [];
+    let doubledIds: number[] = [];
 
     for (let i = start; i <= end; i++) {
-        if (isIdSymmetrical(i.toString())) {
-            invalidNumbers = [...invalidNumbers, i];
+        if (isIdDoubled(i.toString())) {
+            doubledIds = [...doubledIds, i];
         }
     }
 
-    return invalidNumbers;
+    return doubledIds;
 }
 
-function isIdSymmetrical(value: string): boolean {
+function isIdDoubled(value: string): boolean {
     const digits = value.split("");
 
     if (digits.length % 2 !== 0) return false;
@@ -51,27 +48,27 @@ function isIdSymmetrical(value: string): boolean {
 
 function partTwo(idRanges: IdRange[]): number {
     const invalidIds = idRanges.reduce(
-        (acc: number[], range: IdRange) => [...acc, ...findInvalidIds(range)],
+        (acc: number[], range: IdRange) => [...acc, ...findRepeatingIds(range)],
         []
     );
 
     return invalidIds.reduce((acc, value) => acc + value, 0);
 }
 
-function findInvalidIds(range: IdRange): number[] {
+function findRepeatingIds(range: IdRange): number[] {
     const [start, end] = range;
-    let invalidNumbers: number[] = [];
+    let repeatingIds: number[] = [];
 
     for (let i = start; i <= end; i++) {
-        if (isIdInvalid(i.toString())) {
-            invalidNumbers = [...invalidNumbers, i];
+        if (isIdRepeating(i.toString())) {
+            repeatingIds = [...repeatingIds, i];
         }
     }
 
-    return invalidNumbers;
+    return repeatingIds;
 }
 
-function isIdInvalid(value: string, windowSize: number = 1): boolean {
+function isIdRepeating(value: string, windowSize: number = 1): boolean {
     const digits = value.split("");
 
     const maxWindowSize = Math.floor(digits.length / 2);
@@ -86,7 +83,7 @@ function isIdInvalid(value: string, windowSize: number = 1): boolean {
         const windowSlice = digits.slice(i, i + windowSize).join("");
 
         if (windowPattern !== windowSlice) {
-            return isIdInvalid(value, windowSize + 1);
+            return isIdRepeating(value, windowSize + 1);
         }
     }
 
