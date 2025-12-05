@@ -1,4 +1,4 @@
-export function dayTwo(input: string): [string, string] {
+export function dayThree(input: string): [string, string] {
     return [partOne().toString(), ""];
 }
 

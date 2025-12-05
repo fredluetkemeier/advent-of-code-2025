@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { dayOne } from "./solutions/day1.js";
 import { dayTwo } from "./solutions/day2.js";
+import { dayThree } from "./solutions/day3.js";
 import fs from "fs";
 
 const program = new Command();
@@ -31,6 +32,8 @@ function getDayFn(day: string): (inputs: string) => [string, string] {
             return dayOne;
         case "2":
             return dayTwo;
+        case "3":
+            return dayThree;
         default:
             return ([]) => ["", ""];
     }
