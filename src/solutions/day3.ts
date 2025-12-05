@@ -1,7 +1,7 @@
 export function dayThree(input: string): [string, string] {
     const batteryBanks = input.split("\n");
 
-    return [partOne(batteryBanks).toString(), ""];
+    return [partOne(batteryBanks).toString(), partTwo(batteryBanks).toString()];
 }
 
 // PART 1
@@ -43,4 +43,10 @@ function findMaxJoltage(batteries: Battery[]): number {
 
 function sortBatteries(batteries: Battery[]): Battery[] {
     return [...batteries].sort((a, b) => b.value - a.value);
+}
+
+// PART 2
+
+function partTwo(batteryBanks: string[]): number {
+    return 0;
 }
