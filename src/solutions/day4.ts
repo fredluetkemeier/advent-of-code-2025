@@ -1,9 +1,20 @@
 export function dayFour(input: string): [string, string] {
-    return [partOne().toString(), ""];
+    const grid = parseGrid(input);
+
+    return [partOne(grid).toString(), ""];
+}
+
+type Grid = string[][];
+
+function parseGrid(input: string): Grid {
+    return input
+        .trim()
+        .split("\n")
+        .map((x) => x.split(""));
 }
 
 // PART 1
 
-function partOne(): number {
+function partOne(grid: Grid): number {
     return 0;
 }
