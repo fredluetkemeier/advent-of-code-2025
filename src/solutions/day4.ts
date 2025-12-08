@@ -18,3 +18,7 @@ function parseGrid(input: string): Grid {
 function partOne(grid: Grid): number {
     return 0;
 }
+
+function countAccessibleGridSlots(grid: Grid, currentRow: number = 0): number {
+    const row = grid[currentRow];
+}
