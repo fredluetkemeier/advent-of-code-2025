@@ -41,34 +41,6 @@ function countAccessibleGridSlots(grid: Grid, rowIndex: number = 0): number {
     return count + countAccessibleGridSlots(grid, rowIndex + 1);
 }
 
-type Point = [number, number];
-
-function getPoints(
-    columnIndex: number,
-    rowIndex: number,
-    radius: number
-): Point[] {
-    const xIndices = getIndices(columnIndex, radius);
-    const yIndices = getIndices(rowIndex, radius);
-
-    return xIndices
-        .reduce<Point[]>(
-            (xAcc, xIndex) => [
-                ...xAcc,
-                ...yIndices.reduce<Point[]>(
-                    (yAcc, yIndex) => [...yAcc, [xIndex, yIndex]],
-                    []
-                ),
-            ],
-            []
-        )
-        .filter(([x, y]) => !(x === columnIndex && y === rowIndex));
-}
-
-function getIndices(startIndex: number, radius: number): number[] {
-    return [...Array(3)].map((_, index) => startIndex - radius + index);
-}
-
 // PART 2
 
 function partTwo(grid: Grid): number {
@@ -122,4 +94,34 @@ function removeAccessibleGridSlots(
         count: count + next.count,
         newGrid: [newRow, ...next.newGrid],
     };
+}
+
+// SHARED
+
+type Point = [number, number];
+
+function getPoints(
+    columnIndex: number,
+    rowIndex: number,
+    radius: number
+): Point[] {
+    const xIndices = getIndices(columnIndex, radius);
+    const yIndices = getIndices(rowIndex, radius);
+
+    return xIndices
+        .reduce<Point[]>(
+            (xAcc, xIndex) => [
+                ...xAcc,
+                ...yIndices.reduce<Point[]>(
+                    (yAcc, yIndex) => [...yAcc, [xIndex, yIndex]],
+                    []
+                ),
+            ],
+            []
+        )
+        .filter(([x, y]) => !(x === columnIndex && y === rowIndex));
+}
+
+function getIndices(startIndex: number, radius: number): number[] {
+    return [...Array(3)].map((_, index) => startIndex - radius + index);
 }
