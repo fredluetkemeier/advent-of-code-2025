@@ -1,8 +1,6 @@
 export function dayFive(input: string): [string, string] {
     const { freshRanges, ids } = parseInput(input);
 
-    console.log(freshRanges, ids);
-
     return [partOne(freshRanges, ids).toString(), ""];
 }
 
@@ -22,5 +20,9 @@ function parseInput(input: string): { freshRanges: IdRange[]; ids: number[] } {
 // PART 1
 
 function partOne(freshRanges: IdRange[], ids: number[]): number {
-    return 0;
+    const freshIds = ids.filter((id) =>
+        freshRanges.find(([start, end]) => id >= start && id <= end)
+    );
+
+    return freshIds.length;
 }
