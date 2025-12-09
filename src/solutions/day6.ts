@@ -84,12 +84,13 @@ function partTwo(grid: string[][], operators: string[]): number {
 }
 
 function doCephalopodMath(row: string[], operator: string) {
-    console.log("ROW", row);
+    // console.log("OPERATOR", operator);
 
     const res = invertGrid(row.map((x) => String(x).split("").reverse()))
         .map((x) => Number(x.filter((digit) => digit !== "0").join("")))
         .map((x) => {
-            console.log(x);
+            if (x === 0) console.log(row, operator);
+
             return x;
         })
         .reduce((acc, x) => (operator === "+" ? acc + x : (acc || 1) * x), 0);
