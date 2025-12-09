@@ -10,7 +10,7 @@ function parseGrid(input: string): Grid {
     return input
         .trim()
         .split("\n")
-        .map((x) => x.split(""));
+        .map((x) => x.trim().split(""));
 }
 
 // PART 1
