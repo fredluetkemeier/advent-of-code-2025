@@ -3,7 +3,7 @@ export function dayFive(input: string): [string, string] {
 
     return [
         partOne(freshRanges, ids).toString(),
-        partTwo(freshRanges, ids).toString(),
+        partTwo(freshRanges).toString(),
     ];
 }
 
@@ -32,6 +32,34 @@ function partOne(freshRanges: IdRange[], ids: number[]): number {
 
 // PART 2
 
-function partTwo(freshRanges: IdRange[], ids: number[]): number {
-    return 0;
+function partTwo(freshRanges: IdRange[]): number {
+    const combinedRanges = combineRanges(freshRanges);
+
+    return combinedRanges.reduce(
+        (acc, [start, end]) => acc + (end - start + 1),
+        0
+    );
+}
+
+function combineRanges(ranges: IdRange[]): IdRange[] {
+    return ranges
+        .sort(([aStart], [bStart]) => {
+            return aStart - bStart;
+        })
+        .reduce<IdRange[]>((acc, [start, end]) => {
+            const lastCollapsedRange = acc[acc.length - 1];
+
+            if (!lastCollapsedRange) return [...acc, [start, end]];
+
+            const [startLast, endLast] = lastCollapsedRange;
+
+            if (start >= startLast && start <= endLast) {
+                return [
+                    ...acc.slice(0, acc.length - 1),
+                    [Math.min(start, startLast), Math.max(end, endLast)],
+                ];
+            }
+
+            return [...acc, [start, end]];
+        }, []);
 }
