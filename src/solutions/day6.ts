@@ -32,7 +32,7 @@ function parsePartTwoInput(input: string): {
     numbers: string[][];
     operators: string[];
 } {
-    const allRows = input.trim().split("\n");
+    const allRows = input.split("\n");
     const operatorIndices = allRows[allRows.length - 1]!.split("")
         .map((x, index) => (x === "*" || x === "+" ? index : null))
         .filter((x) => x !== null);
@@ -84,18 +84,9 @@ function partTwo(grid: string[][], operators: string[]): number {
 }
 
 function doCephalopodMath(row: string[], operator: string) {
-    // console.log("OPERATOR", operator);
-
-    const res = invertGrid(row.map((x) => String(x).split("").reverse()))
+    return invertGrid(row.map((x) => String(x).split("").reverse()))
         .map((x) => Number(x.filter((digit) => digit !== "0").join("")))
-        .map((x) => {
-            if (x === 0) console.log(row, operator);
-
-            return x;
-        })
         .reduce((acc, x) => (operator === "+" ? acc + x : (acc || 1) * x), 0);
-
-    return res;
 }
 
 // SHARE

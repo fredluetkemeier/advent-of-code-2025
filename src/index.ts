@@ -26,7 +26,7 @@ program
 program.parse();
 
 function readInputFile(filename: string): string {
-    return fs.readFileSync(`./inputs/${filename}`, "utf-8").trim();
+    return fs.readFileSync(`./inputs/${filename}`, "utf-8");
 }
 
 function getDayFn(day: string): (inputs: string) => [string, string] {
