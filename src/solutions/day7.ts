@@ -15,6 +15,8 @@ function parseInput(input: string): Diagram {
 function partOne(diagram: Diagram): number {
     const result = projectTachyonBeam(diagram);
 
+    console.log(result.diagram, result.splitCount);
+
     return 0;
 }
 
@@ -39,28 +41,83 @@ function projectTachyonBeam(
         return { splitCount: next.splitCount, diagram: next.diagram };
     }
 
-    // const currentRowSplitterIndices = getSplitterIndicesInRow(currentRow);
-
     const previousRow = diagram[rowIndex - 1]!;
-    const newRow = splitBeams(currentRow).map((x, index) => {
-        const spaceAbove = previousRow.at(index)!;
 
-        if (spaceAbove === "S") {
-            return "|";
+    const { splitCount, row: newRow } = currentRow.reduce<{
+        splitCount: number;
+        row: string[];
+    }>(
+        (acc, item, index, array) => {
+            const itemAbove = previousRow[index]!;
+
+            if (itemAbove === "S") {
+                return {
+                    splitCount: acc.splitCount,
+                    row: [...acc.row, "|"],
+                };
+            }
+
+            if (item === ".")
+                return {
+                    splitCount: acc.splitCount,
+                    row: [...acc.row, itemAbove === "|" ? "|" : "."],
+                };
+
+            if (array[index + 1] === "^" && previousRow[index + 1] === "|")
+                return {
+                    splitCount: acc.splitCount + 1,
+                    row: [...acc.row, "|"],
+                };
+
+            if (array[index - 1] === "^" && previousRow[index - 1] === "|")
+                return {
+                    splitCount: acc.splitCount + 1,
+                    row: [...acc.row, "|"],
+                };
+
+            return {
+                splitCount: acc.splitCount,
+                row: [...acc.row, item],
+            };
+        },
+        {
+            splitCount: 0,
+            row: [],
         }
+    );
 
-        if (x === ".") return spaceAbove === "|" ? "|" : ".";
-
-        return x;
-    });
+    const next = projectTachyonBeam(diagram, rowIndex + 1);
 
     return {
-        splitCount: 0,
-        diagram: diagram,
+        splitCount: splitCount + next.splitCount,
+        diagram: [
+            ...diagram.slice(0, rowIndex),
+            newRow,
+            ...next.diagram.slice(rowIndex + 1),
+        ],
     };
 }
 
-function splitBeams(row: string[], index: number = 0): string[] {}
+// function splitBeams(
+//     row: string[],
+//     previousRow: string[],
+//     index: number = 0
+// ): string[] {
+//     if (row.length === 0) return [];
+
+//     const [item, ...rest] = row.slice(index);
+
+//     if (!item) return [];
+
+//     if (item !== "^")
+//         return [item, ...splitBeams(rest, previousRow, index + 1)];
+
+//     const itemAbove = previousRow.at(index)!;
+
+//     if (itemAbove === "|") {
+//         return ["|", ...splitBeams(row.slice(index + ), )]
+//     }
+// }
 
 // function getSplitterIndicesInRow(row: string[]): number[] {
 //     return row.reduce<number[]>(
