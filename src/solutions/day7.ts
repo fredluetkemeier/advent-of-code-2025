@@ -39,15 +39,19 @@ function projectTachyonBeam(
         return { splitCount: next.splitCount, diagram: next.diagram };
     }
 
-    const currentRowSplitterIndices = getSplitterIndicesInRow(currentRow);
+    // const currentRowSplitterIndices = getSplitterIndicesInRow(currentRow);
 
     const previousRow = diagram[rowIndex - 1]!;
-    const newRow = currentRow.map((x, index) => {
+    const newRow = splitBeams(currentRow).map((x, index) => {
         const spaceAbove = previousRow.at(index)!;
 
         if (spaceAbove === "S") {
             return "|";
         }
+
+        if (x === ".") return spaceAbove === "|" ? "|" : ".";
+
+        return x;
     });
 
     return {
@@ -56,9 +60,11 @@ function projectTachyonBeam(
     };
 }
 
-function getSplitterIndicesInRow(row: string[]): number[] {
-    return row.reduce<number[]>(
-        (acc, item, index) => (item === "^" ? [...acc, index] : acc),
-        []
-    );
-}
+function splitBeams(row: string[], index: number = 0): string[] {}
+
+// function getSplitterIndicesInRow(row: string[]): number[] {
+//     return row.reduce<number[]>(
+//         (acc, item, index) => (item === "^" ? [...acc, index] : acc),
+//         []
+//     );
+// }
