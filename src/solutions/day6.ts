@@ -89,7 +89,7 @@ function doCephalopodMath(row: string[], operator: string) {
         .reduce((acc, x) => (operator === "+" ? acc + x : (acc || 1) * x), 0);
 }
 
-// SHARE
+// SHARED
 
 function invertGrid<T>(grid: T[][]): T[][] {
     return grid.reduce<T[][]>(
