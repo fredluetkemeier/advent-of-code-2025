@@ -15,9 +15,7 @@ function parseInput(input: string): Diagram {
 function partOne(diagram: Diagram): number {
     const result = projectTachyonBeam(diagram);
 
-    console.log(result.diagram, result.splitCount);
-
-    return 0;
+    return result.splitCount;
 }
 
 function projectTachyonBeam(
@@ -57,12 +55,6 @@ function projectTachyonBeam(
                 };
             }
 
-            if (item === ".")
-                return {
-                    splitCount: acc.splitCount,
-                    row: [...acc.row, itemAbove === "|" ? "|" : "."],
-                };
-
             if (array[index + 1] === "^" && previousRow[index + 1] === "|")
                 return {
                     splitCount: acc.splitCount + 1,
@@ -71,8 +63,14 @@ function projectTachyonBeam(
 
             if (array[index - 1] === "^" && previousRow[index - 1] === "|")
                 return {
-                    splitCount: acc.splitCount + 1,
+                    splitCount: acc.splitCount,
                     row: [...acc.row, "|"],
+                };
+
+            if (item === ".")
+                return {
+                    splitCount: acc.splitCount,
+                    row: [...acc.row, itemAbove === "|" ? "|" : "."],
                 };
 
             return {
@@ -86,42 +84,13 @@ function projectTachyonBeam(
         }
     );
 
-    const next = projectTachyonBeam(diagram, rowIndex + 1);
+    const next = projectTachyonBeam(
+        [...diagram.slice(0, rowIndex), newRow, ...diagram.slice(rowIndex + 1)],
+        rowIndex + 1
+    );
 
     return {
         splitCount: splitCount + next.splitCount,
-        diagram: [
-            ...diagram.slice(0, rowIndex),
-            newRow,
-            ...next.diagram.slice(rowIndex + 1),
-        ],
+        diagram: next.diagram,
     };
 }
-
-// function splitBeams(
-//     row: string[],
-//     previousRow: string[],
-//     index: number = 0
-// ): string[] {
-//     if (row.length === 0) return [];
-
-//     const [item, ...rest] = row.slice(index);
-
-//     if (!item) return [];
-
-//     if (item !== "^")
-//         return [item, ...splitBeams(rest, previousRow, index + 1)];
-
-//     const itemAbove = previousRow.at(index)!;
-
-//     if (itemAbove === "|") {
-//         return ["|", ...splitBeams(row.slice(index + ), )]
-//     }
-// }
-
-// function getSplitterIndicesInRow(row: string[]): number[] {
-//     return row.reduce<number[]>(
-//         (acc, item, index) => (item === "^" ? [...acc, index] : acc),
-//         []
-//     );
-// }
