@@ -105,9 +105,13 @@ function partTwo(diagram: Diagram): number {
 }
 
 type Tree = {
-    item: string;
-    direction: "left" | "right";
+    isLeaf: boolean;
     children: Tree[];
 };
 
-function convertDiagramToTree(diagram: Diagram): Tree {}
+function convertDiagramToTree(diagram: Diagram): Tree {
+    return {
+        isLeaf: false,
+        children: [],
+    };
+}
