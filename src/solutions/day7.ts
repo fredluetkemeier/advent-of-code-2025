@@ -1,7 +1,7 @@
 export function daySeven(input: string): [string, string] {
     const diagram = parseInput(input);
 
-    return [partOne(diagram).toString(), ""];
+    return [partOne(diagram).toString(), partTwo(diagram).toString()];
 }
 
 type Diagram = string[][];
@@ -94,3 +94,20 @@ function projectTachyonBeam(
         diagram: next.diagram,
     };
 }
+
+// PART 2
+
+function partTwo(diagram: Diagram): number {
+    const completedDiagram = projectTachyonBeam(diagram);
+    const beamTree = convertDiagramToTree(completedDiagram.diagram);
+
+    return 0;
+}
+
+type Tree = {
+    item: string;
+    direction: "left" | "right";
+    children: Tree[];
+};
+
+function convertDiagramToTree(diagram: Diagram): Tree {}
