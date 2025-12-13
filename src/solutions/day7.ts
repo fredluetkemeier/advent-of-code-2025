@@ -1,3 +1,5 @@
+import { parentPort, workerData, Worker } from "node:worker_threads";
+
 export function daySeven(input: string): [string, string] {
     const diagram = parseInput(input);
 
@@ -99,19 +101,36 @@ function projectTachyonBeam(
 
 function partTwo(diagram: Diagram): number {
     const completedDiagram = projectTachyonBeam(diagram);
-    const beamTree = convertDiagramToTree(completedDiagram.diagram);
 
-    return 0;
+    return countTachyonTimelines(completedDiagram.diagram);
 }
 
-type Tree = {
-    isLeaf: boolean;
-    children: Tree[];
-};
+function countTachyonTimelines(diagram: Diagram): number {
+    const startIndex = diagram[0]!.indexOf("S");
+    return getTimelineCount(diagram, startIndex);
+}
 
-function convertDiagramToTree(diagram: Diagram): Tree {
-    return {
-        isLeaf: false,
-        children: [],
-    };
+function getTimelineCount(diagram: Diagram, startColIndex: number): number {
+    const cache = new Map<string, number>();
+
+    function helper(rowIndex: number, colIndex: number): number {
+        if (rowIndex > diagram.length - 1) return 1;
+
+        const cacheKey = `${rowIndex},${colIndex}`;
+        if (cache.has(cacheKey)) return cache.get(cacheKey)!;
+
+        const item = diagram[rowIndex]![colIndex];
+
+        const result =
+            item === "^"
+                ? helper(rowIndex + 1, colIndex - 1) +
+                  helper(rowIndex + 1, colIndex + 1)
+                : helper(rowIndex + 1, colIndex);
+
+        cache.set(cacheKey, result);
+
+        return result;
+    }
+
+    return helper(0, startColIndex);
 }
