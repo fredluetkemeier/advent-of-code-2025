@@ -1,10 +1,10 @@
-export function daySix(input: string): [string, string] {
+export function daySix(input: string): [number, number] {
     const partOneInput = parsePartOneInput(input);
     const partTwoInput = parsePartTwoInput(input);
 
     return [
-        partOne(partOneInput.numbers, partOneInput.operators).toString(),
-        partTwo(partTwoInput.numbers, partTwoInput.operators).toString(),
+        partOne(partOneInput.numbers, partOneInput.operators),
+        partTwo(partTwoInput.numbers, partTwoInput.operators),
     ];
 }
 

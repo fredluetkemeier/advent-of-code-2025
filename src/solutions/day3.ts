@@ -1,7 +1,7 @@
-export function dayThree(input: string): [string, string] {
+export function dayThree(input: string): [number, number] {
     const batteryBanks = input.split("\n");
 
-    return [partOne(batteryBanks).toString(), partTwo(batteryBanks).toString()];
+    return [partOne(batteryBanks), partTwo(batteryBanks)];
 }
 
 // PART 1

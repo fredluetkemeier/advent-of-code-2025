@@ -7,6 +7,7 @@ import { dayFour } from "./solutions/day4.js";
 import { dayFive } from "./solutions/day5.js";
 import { daySix } from "./solutions/day6.js";
 import { daySeven } from "./solutions/day7.js";
+import { dayEight } from "./solutions/day8.js";
 
 const program = new Command();
 
@@ -30,7 +31,7 @@ function readInputFile(filename: string): string {
     return fs.readFileSync(`./inputs/${filename}`, "utf-8");
 }
 
-function getDayFn(day: string): (inputs: string) => [string, string] {
+function getDayFn(day: string): (inputs: string) => [number, number] {
     switch (day) {
         case "1":
             return dayOne;
@@ -46,7 +47,9 @@ function getDayFn(day: string): (inputs: string) => [string, string] {
             return daySix;
         case "7":
             return daySeven;
+        case "8":
+            return dayEight;
         default:
-            return ([]) => ["", ""];
+            return ([]) => [0, 0];
     }
 }

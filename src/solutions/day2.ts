@@ -1,9 +1,9 @@
-export function dayTwo(input: string): [string, string] {
+export function dayTwo(input: string): [number, number] {
     const idRanges = input
         .split(",")
         .map((x) => x.split("-").map(Number) as IdRange);
 
-    return [partOne(idRanges).toString(), partTwo(idRanges).toString()];
+    return [partOne(idRanges), partTwo(idRanges)];
 }
 
 // PART 1

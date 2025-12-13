@@ -1,10 +1,7 @@
-export function dayFive(input: string): [string, string] {
+export function dayFive(input: string): [number, number] {
     const { freshRanges, ids } = parseInput(input);
 
-    return [
-        partOne(freshRanges, ids).toString(),
-        partTwo(freshRanges).toString(),
-    ];
+    return [partOne(freshRanges, ids), partTwo(freshRanges)];
 }
 
 type IdRange = [number, number];

@@ -1,9 +1,7 @@
-import { parentPort, workerData, Worker } from "node:worker_threads";
-
-export function daySeven(input: string): [string, string] {
+export function daySeven(input: string): [number, number] {
     const diagram = parseInput(input);
 
-    return [partOne(diagram).toString(), partTwo(diagram).toString()];
+    return [partOne(diagram), partTwo(diagram)];
 }
 
 type Diagram = string[][];

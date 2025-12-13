@@ -1,7 +1,7 @@
-export function dayFour(input: string): [string, string] {
+export function dayFour(input: string): [number, number] {
     const grid = parseGrid(input);
 
-    return [partOne(grid).toString(), partTwo(grid).toString()];
+    return [partOne(grid), partTwo(grid)];
 }
 
 type Grid = string[][];
