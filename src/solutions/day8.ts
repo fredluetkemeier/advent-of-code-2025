@@ -26,16 +26,19 @@ function parseInput(input: string): Box[] {
 }
 
 function makeBoxId(x: string, y: string, z: string): string {
-    return crypto.createHash("sha1").update(`${x},${y},${z}`).digest("hex");
+    return `${x},${y},${z}`;
 }
 
 // PART 1
 
 function partOne(boxes: Box[]): number {
     const boxPairs = getClosestBoxPairs(boxes);
-    const circuits = makeCircuits(boxPairs.slice(0, 10));
+    const circuits = makeCircuits(boxPairs.slice(0, 1000));
 
-    return 0;
+    return circuits
+        .sort((a, b) => b.size - a.size)
+        .slice(0, 3)
+        .reduce((acc, x) => acc * x.size, 1);
 }
 
 type BoxPair = {
@@ -83,4 +86,29 @@ function getClosestBoxPairs(availableBoxes: Box[]): BoxPair[] {
     );
 }
 
-function makeCircuits(boxPairs: BoxPair[]) {}
+function makeCircuits(boxPairs: BoxPair[]) {
+    return boxPairs.reduce<Set<string>[]>((acc, { boxes: [boxA, boxB] }) => {
+        const [circuitsWithPair, rest] = acc.reduce<
+            [Set<string>[], Set<string>[]]
+        >(
+            (acc, x) =>
+                x.has(boxA.id) || x.has(boxB.id)
+                    ? [[...acc[0], x], acc[1]]
+                    : [acc[0], [...acc[1], x]],
+            [[], []]
+        );
+
+        const boxIds = [boxA, boxB].map((x) => x.id);
+
+        if (circuitsWithPair.length > 0) {
+            const newCircuit = circuitsWithPair.reduce(
+                (acc, circuit) => acc.union(circuit),
+                new Set(boxIds)
+            );
+
+            return [...rest, newCircuit];
+        }
+
+        return [...acc, new Set(boxIds)];
+    }, []);
+}
