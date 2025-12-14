@@ -1,7 +1,7 @@
 export function dayEight(input: string): [number, number] {
     const boxes = parseInput(input);
 
-    return [partOne(boxes), 0];
+    return [partOne(boxes), partTwo(boxes)];
 }
 
 type Box = {
@@ -104,4 +104,10 @@ function makeCircuits(boxPairs: BoxPair[]) {
 
         return [...acc, new Set(boxIds)];
     }, []);
+}
+
+// PART 2
+
+function partTwo(boxes: Box[]): number {
+    return 0;
 }
