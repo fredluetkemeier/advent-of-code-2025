@@ -109,5 +109,7 @@ function makeCircuits(boxPairs: BoxPair[]) {
 // PART 2
 
 function partTwo(boxes: Box[]): number {
+    const boxPairs = getClosestBoxPairs(boxes);
+
     return 0;
 }
