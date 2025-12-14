@@ -1,5 +1,3 @@
-import crypto from "crypto";
-
 export function dayEight(input: string): [number, number] {
     const boxes = parseInput(input);
 
@@ -59,15 +57,10 @@ function getClosestBoxPairs(availableBoxes: Box[]): BoxPair[] {
             if (boxA.id === boxB.id) continue;
 
             const boxPair: [Box, Box] = [boxA, boxB];
-            const key = crypto
-                .createHash("sha1")
-                .update(
-                    boxPair
-                        .map((x) => x.id)
-                        .sort()
-                        .join("-")
-                )
-                .digest("hex");
+            const key = boxPair
+                .map((x) => x.id)
+                .sort()
+                .join("-");
 
             if (boxPermutations.has(key)) continue;
 
