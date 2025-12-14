@@ -32,12 +32,18 @@ function makeBoxId(x: string, y: string, z: string): string {
 // PART 1
 
 function partOne(boxes: Box[]): number {
-    findClosestBoxes(boxes);
+    const boxPairs = getClosestBoxPairs(boxes);
+    const circuits = makeCircuits(boxPairs.slice(0, 10));
 
     return 0;
 }
 
-function findClosestBoxes(availableBoxes: Box[]) {
+type BoxPair = {
+    boxes: [Box, Box];
+    distance: number;
+};
+
+function getClosestBoxPairs(availableBoxes: Box[]): BoxPair[] {
     const boxPermutations = new Map<
         string,
         {
@@ -72,33 +78,9 @@ function findClosestBoxes(availableBoxes: Box[]) {
         }
     }
 
-    const sortedBoxPermutations = [...boxPermutations.values()].sort(
+    return [...boxPermutations.values()].sort(
         (a, b) => a.distance - b.distance
     );
-
-    console.log(sortedBoxPermutations.slice(0, 10).map((x) => x.boxes));
-
-    // const temp = availableBoxes.reduce<[Box, Box][]>(
-    //     (accA, boxA) => [
-    //         ...accA,
-    //         ...availableBoxes.reduce<[Box, Box][]>(
-    //             (accB, boxB) => [...accB, [boxA, boxB]],
-    //             []
-    //         ),
-    //     ],
-    //     []
-    // );
-
-    // console.log(temp);
-
-    // const sortedBoxes = availableBoxes.sort(
-    //     (a, b) =>
-    //         Math.pow(a.x - b.x, 2) +
-    //         Math.pow(a.y - b.y, 2) +
-    //         Math.pow(a.z - b.z, 2)
-    // );
-
-    // // console.log(sortedBoxes);
-
-    return [];
 }
+
+function makeCircuits(boxPairs: BoxPair[]) {}
