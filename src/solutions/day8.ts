@@ -44,7 +44,7 @@ type BoxPair = {
     distance: number;
 };
 
-function getClosestBoxPairs(availableBoxes: Box[]): BoxPair[] {
+function getClosestBoxPairs(boxes: Box[]): BoxPair[] {
     const boxPermutations = new Map<
         string,
         {
@@ -52,8 +52,8 @@ function getClosestBoxPairs(availableBoxes: Box[]): BoxPair[] {
             distance: number;
         }
     >();
-    for (const boxA of availableBoxes) {
-        for (const boxB of availableBoxes) {
+    for (const boxA of boxes) {
+        for (const boxB of boxes) {
             if (boxA.id === boxB.id) continue;
 
             const boxPair: [Box, Box] = [boxA, boxB];
@@ -79,7 +79,7 @@ function getClosestBoxPairs(availableBoxes: Box[]): BoxPair[] {
     );
 }
 
-function makeCircuits(boxPairs: BoxPair[]) {
+function makeCircuits(boxPairs: BoxPair[]): Set<string>[] {
     return boxPairs.reduce<Set<string>[]>((acc, { boxes: [boxA, boxB] }) => {
         const [circuitsWithPair, rest] = acc.reduce<
             [Set<string>[], Set<string>[]]
@@ -112,4 +112,31 @@ function partTwo(boxes: Box[]): number {
     const boxPairs = getClosestBoxPairs(boxes);
 
     return 0;
+}
+
+function findPairThatCompletesCircuit(boxPairs: BoxPair[]): Set<string>[] {
+    return boxPairs.reduce<Set<string>[]>((acc, { boxes: [boxA, boxB] }) => {
+        const [circuitsWithPair, rest] = acc.reduce<
+            [Set<string>[], Set<string>[]]
+        >(
+            (acc, x) =>
+                x.has(boxA.id) || x.has(boxB.id)
+                    ? [[...acc[0], x], acc[1]]
+                    : [acc[0], [...acc[1], x]],
+            [[], []]
+        );
+
+        const boxIds = [boxA, boxB].map((x) => x.id);
+
+        if (circuitsWithPair.length > 0) {
+            const newCircuit = circuitsWithPair.reduce(
+                (acc, circuit) => acc.union(circuit),
+                new Set(boxIds)
+            );
+
+            return [...rest, newCircuit];
+        }
+
+        return [...acc, new Set(boxIds)];
+    }, []);
 }
