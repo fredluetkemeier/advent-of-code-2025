@@ -8,6 +8,7 @@ import { dayFive } from "./solutions/day5.js";
 import { daySix } from "./solutions/day6.js";
 import { daySeven } from "./solutions/day7.js";
 import { dayEight } from "./solutions/day8.js";
+import { dayNine } from "./solutions/day9.js";
 
 const program = new Command();
 
@@ -49,6 +50,8 @@ function getDayFn(day: string): (inputs: string) => [number, number] {
             return daySeven;
         case "8":
             return dayEight;
+        case "9":
+            return dayNine;
         default:
             return ([]) => [0, 0];
     }
