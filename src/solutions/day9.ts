@@ -1,7 +1,7 @@
 export function dayNine(input: string): [number, number] {
     const points = parseInput(input);
 
-    return [partOne(points), 0];
+    return [partOne(points), partTwo(points)];
 }
 
 type Point = {
@@ -37,4 +37,10 @@ function findLargestArea(points: Point[]): number {
     }
 
     return [...areaSet].sort((a, b) => b - a)[0]!;
+}
+
+// PART 2
+
+function partTwo(points: Point[]): number {
+    return 0;
 }
