@@ -45,13 +45,7 @@ type BoxPair = {
 };
 
 function getClosestBoxPairs(boxes: Box[]): BoxPair[] {
-    const boxPermutations = new Map<
-        string,
-        {
-            boxes: [Box, Box];
-            distance: number;
-        }
-    >();
+    const boxPermutations = new Map<string, BoxPair>();
     for (const boxA of boxes) {
         for (const boxB of boxes) {
             if (boxA.id === boxB.id) continue;
