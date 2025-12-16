@@ -64,11 +64,7 @@ function findLargestAreaWithinBounds(points: Point[]): number {
                 bounds
             );
 
-            // console.log([pointA, pointB], isWithinBounds);
-
             if (!isWithinBounds) continue;
-
-            // console.log(pointA, pointB);
 
             const area =
                 (Math.abs(pointA.x - pointB.x) + 1) *
@@ -109,88 +105,67 @@ function isRectangleWithinBounds(
     ];
     const boundXMap = makeBoundXMap(bounds);
 
-    if (pointA.x === 7 && pointA.y === 1 && pointB.x === 11 && pointB.y === 7) {
-        return extrapolatedPoints.every((point) => {
-            // console.log("point", point);
+    return extrapolatedPoints.every((point) => {
+        const intersectingBounds = bounds.filter(([pointA, pointB]) => {
+            if (pointA.x === pointB.x) return false;
 
-            const intersectingBounds = bounds.filter(([pointA, pointB]) => {
-                if (pointA.x === pointB.x) return false;
+            if (
+                (point.x === pointA.x && point.y === pointA.y) ||
+                (point.x === pointB.x && point.y === pointB.y)
+            )
+                return false;
 
-                if (
-                    (point.x === pointA.x && point.y === pointA.y) ||
-                    (point.x === pointB.x && point.y === pointB.y)
-                )
-                    return true;
+            const [lesserPoint, greaterPoint] = [pointA, pointB].sort(
+                (a, b) => a.x - b.x
+            );
 
-                const [lesserPoint, greaterPoint] = [pointA, pointB].sort(
-                    (a, b) => a.x - b.x
-                );
+            const boundsAtX = boundXMap.get(point.x)!;
+            const verticalBound = boundsAtX.find(
+                (boundAtX) =>
+                    boundAtX[0].x === point.x &&
+                    boundAtX[1].x === point.x &&
+                    (boundAtX[0].x === lesserPoint!.x ||
+                        boundAtX[0].x === greaterPoint!.x)
+            );
+            const complementaryBound = verticalBound
+                ? boundsAtX.find((boundAtX) => {
+                      const sortedPoints = boundAtX.sort((a, b) => a.x - b.x);
 
-                // console.log({ lesserPoint, greaterPoint });
+                      const touchesVerticalBound = boundAtX.some(
+                          (x) => x.x === verticalBound![0].x
+                      );
+                      const isNotParallelToOriginalBound =
+                          lesserPoint!.x === sortedPoints[1].x ||
+                          greaterPoint!.x === sortedPoints[0].x;
+                      const isVertical = boundAtX[0].x === boundAtX[1].x;
 
-                const boundsAtX = boundXMap.get(point.x)!;
-                const verticalBound = boundsAtX.find(
-                    (boundAtX) =>
-                        boundAtX[0].x === point.x &&
-                        boundAtX[1].x === point.x &&
-                        (boundAtX[0].x === lesserPoint!.x ||
-                            boundAtX[0].x === greaterPoint!.x)
-                );
-                // console.log("verticalBound", verticalBound);
-                const complementaryBound = verticalBound
-                    ? boundsAtX.find((boundAtX) => {
-                          const sortedPoints = boundAtX.sort(
-                              (a, b) => a.x - b.x
-                          );
+                      return (
+                          touchesVerticalBound &&
+                          isNotParallelToOriginalBound &&
+                          !isVertical
+                      );
+                  })
+                : undefined;
 
-                          const touchesVerticalBound = boundAtX.some(
-                              (x) => x.x === verticalBound![0].x
-                          );
-                          const isNotAboveOriginalBound =
-                              lesserPoint!.x === sortedPoints[1].x ||
-                              greaterPoint!.x === sortedPoints[0].x;
-                          const isVertical = boundAtX[0].x === boundAtX[1].x;
-
-                          return (
-                              touchesVerticalBound &&
-                              isNotAboveOriginalBound &&
-                              !isVertical
-                          );
-                      })
-                    : undefined;
-                // console.log("complementaryBound", complementaryBound);
-
-                const isHigherBoundAtVerticalIntersection =
-                    Boolean(complementaryBound) &&
-                    lesserPoint!.y < complementaryBound![0].y;
-
-                const isIntersecting =
-                    point.x >= lesserPoint!.x &&
-                    point.x <= greaterPoint!.x &&
-                    point.y > lesserPoint!.y &&
-                    (Boolean(complementaryBound)
-                        ? isHigherBoundAtVerticalIntersection
-                        : true);
-
-                // console.log();
-
-                return isIntersecting;
-            });
-
-            // console.log(intersectingBounds);
-
-            // console.log(JSON.stringify(intersectingBounds, null, 2));
-
-            // console.log(intersectingBounds.length);
+            const isHigherBoundAtVerticalIntersection =
+                Boolean(complementaryBound) &&
+                lesserPoint!.y < complementaryBound![0].y;
 
             return (
-                intersectingBounds.length !== 0 &&
-                intersectingBounds.length % 2 !== 0
+                point.x >= lesserPoint!.x &&
+                point.x <= greaterPoint!.x &&
+                point.y > lesserPoint!.y &&
+                (Boolean(complementaryBound)
+                    ? isHigherBoundAtVerticalIntersection
+                    : true)
             );
         });
-    }
 
-    return false;
+        return (
+            intersectingBounds.length !== 0 &&
+            intersectingBounds.length % 2 !== 0
+        );
+    });
 }
 
 function makeBoundXMap(
@@ -206,31 +181,3 @@ function makeBoundXMap(
 
     return map;
 }
-
-// function consolidateBounds(bounds: [Point, Point][]): [Point, Point][] {
-//     const xMap = new Map<number, [Point, Point][]>();
-
-//     for (const bound of bounds) {
-//         bound.forEach((point) =>
-//             xMap.set(point.x, [...(xMap.get(point.x) ?? []), bound])
-//         );
-//     }
-
-//     return bounds.reduce<[Point, Point][]>((acc, bound) => {
-//         const temp = bound.map((boundPoint) => {
-//             const boundsAtX = xMap.get(boundPoint.x)!;
-
-//             const firstBound = boundsAtX.find(
-//                 (boundAtX) =>
-//                     boundAtX[0].x === boundPoint.x &&
-//                     boundAtX[0].x !== boundAtX[1].x
-//             );
-//             const secondBound = boundsAtX.find(
-//                 (boundAtX) =>
-//                     boundAtX[1].x === boundPoint.x &&
-//                     boundAtX[0].x !== boundAtX[1].x
-//             );
-//             const verticalBound = boundsAtX.find((boundAtX) => boundAtX);
-//         });
-//     }, []);
-// }
